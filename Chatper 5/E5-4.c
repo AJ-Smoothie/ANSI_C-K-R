@@ -11,7 +11,6 @@ void main()
  
   printf("Results: "); printf("%d", strend(a, b));
 
-
 }
 
 int strend(char *a, char *b)
