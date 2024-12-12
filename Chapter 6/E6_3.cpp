@@ -2,6 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <string.h>
+#include <sstream>
 using namespace std;
 
 struct tnode {
@@ -11,23 +12,34 @@ struct tnode {
   tnode *right;
 };
 
+// Function prototypes
+void treeprint(tnode *p);
+tnode *makeNode();
+void freeTree(tnode *root);
+tnode *addtree(tnode *p, char *w);
+vector<string> getWord(const char *str);
+void printWords(const char *str);
+
+/**
+ * Currently we can read from the file and store the words in a vector.
+ * 
+ */
+
 
 int main()
 {
   FILE *file = fopen("C:/Users/ajrob/Desktop/Bagel.txt", "r");
   if (file == NULL) { perror("Error opening file"); return 1; }
 
-  //  char ch;
-  //  while ((ch = fgetc(file)) != EOF) {
-  //      putchar(ch);
-  //  }
-
-  //	char *fgets(char *str, int n, FILE *stream)
   char str[100];
-
   fgets(str, 100, file);
 
-  std::cout << str;
+  vector<string>document = getWord(str);
+  // how do I print the words in the document?
+  for (int i = 0; i < document.size(); i++) cout << document[i] << endl;
+
+  
+  
   fclose(file);
 
   return 0;
@@ -48,7 +60,6 @@ tnode *makeNode()
 {
   return new tnode;
 }
-
 // Function to deallocate the entire tree
 void freeTree(tnode *root) 
 {
@@ -59,18 +70,6 @@ void freeTree(tnode *root)
       delete root;
     }
 }
-
-/**
- * If the tnode we passed into the tree doesn't point to anything, we create a new node and assign the word to it.
- * If the word is the same as the word in the node, we increase the count.
- * If the word is less than the word in the node, we recursively call the function with the left node.
- * We're now back at the top of the function(nth). First we check to see if p(left) is pointing to anything.
- * If p(left) is not pointing at anything, we can then create a new node (on the left) and assign a word to it. 
- * The rest is skipped and we return p.
- * The previous node's left pointer will now point to the new node. 
- * We skip p->right statement and return p.
- * We're now back to the first fucntion call. The rest is skipped and we return p.
- */
 
 tnode *addtree(tnode *p, char *w)
 {
@@ -91,8 +90,23 @@ tnode *addtree(tnode *p, char *w)
 
 vector<string> getWord(const char * str)
 {
-  vector<string> words;
-  //std::vector<std::string> words;
-
+  vector<string>words; // create a string vector to save the words to
+  stringstream ss(str); // create a stringstream object to read from the string
+  string word; // create a word string to save a word to
+  while (ss >> word) words.push_back(word);
+  return words;
 }
 
+
+
+/**
+ * If the tnode we passed into the tree doesn't point to anything, we create a new node and assign the word to it.
+ * If the word is the same as the word in the node, we increase the count.
+ * If the word is less than the word in the node, we recursively call the function with the left node.
+ * We're now back at the top of the function(nth). First we check to see if p(left) is pointing to anything.
+ * If p(left) is not pointing at anything, we can then create a new node (on the left) and assign a word to it. 
+ * The rest is skipped and we return p.
+ * The previous node's left pointer will now point to the new node. 
+ * We skip p->right statement and return p.
+ * We're now back to the first fucntion call. The rest is skipped and we return p.
+ */
